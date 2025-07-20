@@ -18,6 +18,7 @@ public class vendasVIEW extends JFrame {
 
     public vendasVIEW() {
         initComponents();
+        listarVendas();
     }
 
     private void initComponents() {
@@ -41,5 +42,30 @@ public class vendasVIEW extends JFrame {
         btnVoltar.addActionListener(e -> dispose());
         add(btnVoltar);
     }
-    
+
+    private void listarVendas() {
+        try {
+            ProdutosDAO dao = new ProdutosDAO();
+            ArrayList<ProdutosDTO> lista = dao.buscarProdutosVendidos();
+
+            DefaultTableModel model = new DefaultTableModel();
+            model.addColumn("ID");
+            model.addColumn("Nome");
+            model.addColumn("Valor");
+            model.addColumn("Status");
+
+            for (ProdutosDTO produto : lista) {
+                model.addRow(new Object[]{
+                    produto.getId(),
+                    produto.getNome(),
+                    produto.getValor(),
+                    produto.getStatus()
+                });
+            }
+
+            tabelaVendas.setModel(model);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao listar vendas: " + e.getMessage());
+        }
+    }
 }
